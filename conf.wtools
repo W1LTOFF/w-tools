@@ -1,0 +1,6 @@
+[test]
+answer=42
+text=test
+[group]
+answer=0
+text=coolText
