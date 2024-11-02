@@ -4,4 +4,7 @@
 #include <sstream>
 #include <string>
 
-int main() { wt::Config f("conf.wtools"); }
+int main() {
+    wilt::Config f("conf.wtools");
+    // std::string test = "hello world! !";
+}

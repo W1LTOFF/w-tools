@@ -6,9 +6,8 @@
 #include <print>
 #include <sstream>
 #include <string>
-#include <vector>
 
-wt::Config::Config(std::string configPath) {
+wilt::Config::Config(std::string configPath) {
     std::ifstream f;
     f.open(configPath);
     std::stringstream confStream;
@@ -16,12 +15,36 @@ wt::Config::Config(std::string configPath) {
     f.close();
     // std::print("{}\n", R"()" + confStream.str());
     std::string text = confStream.str();
-    std::vector<std::string> lines;
-    std::replace(text.begin(), text.end(), '\n', ' ');
-    std::print("{}\n", text);
+    std::replace(text.begin(), text.end(), '\n', '|');
+    this->configSrc = text;
+    // std::print("{}\n", text);
+    this->read();
 }
 
-std::string wt::Config::getValue(std::string group, std::string variable,
-                                 std::string type) {
-    return this->conf[group][variable];
+void wilt::Config::writeGroup(std::map<std::string, std::string> values,
+                              std::string groupName) {
+    this->cfg[groupName] = values;
+}
+
+void wilt::Config::read() {
+    std::string src = this->configSrc;
+    bool bRead = false, comment = false;
+    for (int i = 0; i < src.length(); i++) {
+        if (src[i] != '/' || src[i] != '|' && bRead) {
+        }
+        if (src[i] == '[') {
+            bRead = true;
+            src.erase(i, 1);
+        }
+        // std::print("{}", src.substr(0, i));
+        // src.erase(0, i);
+        // this->writeGroup();
+    }
+    std::print("{}", src);
+    // std::print("{}", src);
+}
+
+std::string wilt::Config::getValue(std::string group, std::string variable,
+                                   std::string type) {
+    return this->cfg[group][variable];
 }

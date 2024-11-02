@@ -1,6 +1,8 @@
-[test]
-answer=42
+[test
+answer=42// test comment
 text=test
-[group]
+]
+[group//another test comment
 answer=0
 text=coolText
+]
