@@ -1,41 +1,16 @@
-all: debug clean compile build run
+all: run_example
 
-CC = clang++ -std=c++23
-PROJECT_NAME = wtools
-COMPILER_FLAGS = -Wall -w
-INCLUDE_FLAGS = -Iinclude 
-LINKER_FLAGS = -Llib -lwtools
-LIB_SRC = src/lib/*.cpp
-SRC = src/main.cpp
-ARGS = 
+EXAMPLE = main
 
-compile_lib:
-	$(CC) $(EDITION_FLAGS) -c $(LIB_SRC) -Iinclude
-	ar r $(PROJECT_NAME).lib *.o
-	-rm lib/$(PROJECT_NAME).lib
-	mv $(PROJECT_NAME).lib lib/
-	rm *.o
-
-compile:
-	mkdir ./bin
-	$(CC) $(EDITION_FLAGS) $(SRC) $(COMPILER_FLAGS) -o bin/$(PROJECT_NAME).exe $(INCLUDE_FLAGS) $(LINKER_FLAGS)
-
-release:
-	$(eval EDITION_FLAGS = -O3)
-	$(eval EDITION = release)
-
-debug:
-	$(eval EDITION_FLAGS = --debug)
-	$(eval EDITION = debug)
+cmake_build:
+	-mkdir build
+	cmake -G "MinGW Makefiles" -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -S . -B build
+	cd build; make
 
 run:
-	@echo "build/$(EDITION)/$(PROJECT_NAME).exe running..."
-	@./build/$(EDITION)/$(PROJECT_NAME).exe $(ARGS)
+	.\build\w-example.exe
 
-build:
-	mkdir -p ./build/$(EDITION)
-	cp bin/$(PROJECT_NAME).exe build/$(EDITION)
-
-clean:
-	-rm -rf build
-	-rm -rf bin
+run_example:
+	cmake -G "MinGW Makefiles" -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -S . -B build
+	cd build; make
+	build\\examples\\${EXAMPLE}.exe

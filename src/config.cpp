@@ -6,6 +6,7 @@
 #include <print>
 #include <sstream>
 #include <string>
+#include <vector>
 
 wilt::Config::Config(std::string configPath) {
     std::ifstream f;
@@ -28,19 +29,35 @@ void wilt::Config::writeGroup(std::map<std::string, std::string> values,
 
 void wilt::Config::read() {
     std::string src = this->configSrc;
-    bool bRead = false, comment = false;
+    bool group = false;
     for (int i = 0; i < src.length(); i++) {
-        if (src[i] != '/' || src[i] != '|' && bRead) {
+        if (src[i] != '/' || src[i] != '|' && group) {
         }
         if (src[i] == '[') {
-            bRead = true;
+            group = true;
             src.erase(i, 1);
         }
         // std::print("{}", src.substr(0, i));
         // src.erase(0, i);
         // this->writeGroup();
     }
-    std::print("{}", src);
+    // std::print("{}\n", src);
+    bool inComment = false;
+    std::vector<int> indexToErase;
+    for (int i = 0; i < src.length(); i++) {
+        if ((src[i] == '/' || inComment) && src[i] != '|') {
+            inComment = true;
+            indexToErase.push_back(i);
+            // src.erase(i, 1);
+        }
+        if (src[i] == '|') {
+            inComment = false;
+        }
+    }
+    for (int i = indexToErase.size(); i > 0; i--) {
+        src.erase(indexToErase[i - 1], 1);
+    }
+    std::print("{}\n", src);
     // std::print("{}", src);
 }
 
